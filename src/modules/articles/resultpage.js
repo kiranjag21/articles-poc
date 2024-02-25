@@ -3,7 +3,7 @@ import Button from "../../controls/button/button";
 import Date from "../../controls/date/date";
 import Input from "../../controls/input/Input";
 import moment from "moment";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { ArticleContext } from "../../App";
 import ArticleListItem from "./articleListItem";
@@ -15,6 +15,7 @@ function ResultPage(props) {
   const [endDate, setEndDate] = useState(moment().subtract(3, 'months').format('MM/DD/YYYY'));
   const [selectedArticle, setSelectedArticle] = useState(null);
   const { state, dispatch } = useContext(ArticleContext);
+  const navigate = useNavigate();
 
   const handleNext = () => {
     props.setPopup(1);
@@ -31,7 +32,7 @@ function ResultPage(props) {
     <div className="result-page">
       <div className="border-bottom padding-bottom-15">
         <div className="d-flex flex-gap-30 justify-content-start margin-bottom-24" style={{ width: '100%'}}>
-          <Link className="font-bold">Search Query</Link>
+          <Link className="font-bold" to={'/'}>Search Query</Link>
           <Link className="font-bold">Results</Link>
           <Link className="font-bold">Q & A</Link>
         </div>
