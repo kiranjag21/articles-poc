@@ -45,19 +45,23 @@ function ResultPage(props) {
           <Date dateRange={true} valueFrom={startDate} valueTo={endDate} />
         </div>
       </div>
-      <div className="d-flex align-items-center flex-gap-12 margin-bottom-24">
-        {state.articles.length == 0 && <div>No results</div>}
+      <div className="d-flex align-items-center flex-gap-12 margin-bottom-24" style={{ minHeight: '20vh'}}>
+        {state.articles.length == 0 && <div style={{ fontWeight: 700}}>No results</div>}
         
         {state.articles.length > 0 && 
           <Row>
-            <Col span={8}>
-              {state.articles.map(article => {
-                return <ArticleListItem article={article} onClick={onArticleSelect}/>
-              })}
+              <Col span={8} className="result-menu">
+                {state.articles.map(article => {
+                  let IsSelected = article.ArticleId == (selectedArticle && selectedArticle.ArticleId);
+                  return <ArticleListItem tooltipText={article.ArticleTitle} IsSelected={IsSelected} article={article} onClick={onArticleSelect}/>
+                })}
             </Col>
             <Col span={16}>
               {selectedArticle && 
-                <div>{selectedArticle.ArticleDescription}</div>
+                <div className="padding-20">
+                  <div className="text-align-left font-bold margin-bottom-24">{selectedArticle.ArticleTitle}</div>
+                  <div className="text-align-left">{selectedArticle.ArticleDescription}</div>
+                </div>
               }
             </Col>
           </Row>

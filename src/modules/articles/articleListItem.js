@@ -1,9 +1,14 @@
+import { Tooltip } from "antd";
+
 function ArticleListItem(props) {
 
+  let activeCls = props.IsSelected ? "article-selected" : '';
   return (
-    <div>
-      <p onClick={() => props.onClick(props.article)} className="text-align-left">{props.article.ArticleTitle}</p>
-    </div>
+    <div className={"article-item-wrapper "+ activeCls}>
+        <Tooltip title={props.tooltipText}>
+          <p className="article-item text-align-left" onClick={() => props.onClick(props.article)}>{props.article.ArticleTitle}</p>
+        </Tooltip>
+      </div>
   );
 }
 

@@ -51,14 +51,14 @@ class Date extends React.Component {
             return (<RangePicker
                 onChange={this.props.onChange}
                 disabledDate={this.props.disabledDate}
-                value={[moment(this.props.valueFrom, dateFormat), moment(this.props.valueTo, dateFormat)]}
+                //value={[moment(this.props.valueFrom, dateFormat), moment(this.props.valueTo, dateFormat)]}
                 format={dateFormat} />);
         }
         else if (this.istrue(this.props.monthPicker)) {
             return (<MonthPicker 
                 onChange={this.onChange}
                 disabledDate={this.props.disabledDate}
-                value={moment(this.props.value, monthFormat)}
+                //value={moment(this.props.value, monthFormat)}
                 format={monthFormat} />);
         }
         else {
