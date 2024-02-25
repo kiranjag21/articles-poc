@@ -27,7 +27,7 @@ import { ArticleContext } from "../../App";
     return (
       <div className="search-page">
         <div className="d-flex flex-gap-30 justify-content-start margin-bottom-24" style={{ width: '100%'}}>
-          <Link className="font-bold">Search Query</Link>
+          <Link className="font-bold" onClick={() => navigate("/")}>Search Query</Link>
           <Link className="font-bold">Results</Link>
           <Link className="font-bold">Q & A</Link>
         </div>
