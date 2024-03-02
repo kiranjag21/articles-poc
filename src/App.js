@@ -34,7 +34,7 @@ function App() {
   }
 
   return (
-    <div className="App" style={{ padding: '20px 30px'}}>
+    <div className="App">
     <ArticleContext.Provider value={{ state, dispatch }}>
         <BrowserRouter>
           <React.Suspense fallback={<div>Loading...</div>}>
