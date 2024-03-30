@@ -11,21 +11,35 @@ import { Col, Row } from 'antd';
 import { ComponentRegistry } from "../helpers/componenetRegistry";
 import ArticleDetails from "./articleDetails";
 import QuestionAndAnswer from "./questionAndAnswer";
+import { API_ENDPOINTS } from "../../api/apiEndpoints";
+import api from "../../api/api";
 
 function ResultPage(props) {
 
   const [startDate, setStartDate] = useState(moment().subtract(3, 'months').format('MM/DD/YYYY'));
   const [endDate, setEndDate] = useState(moment().subtract(3, 'months').format('MM/DD/YYYY'));
+  const [searchString, setSearchString] = useState('');
   const [selectedArticle, setSelectedArticle] = useState(null);
   const { state, dispatch } = useContext(ArticleContext);
   const [CurrentCmp, setCurrentCmp] = useState(1);
   const navigate = useNavigate();
 
-  const handleNext = () => {
+  const handleNext = async () => {
+    if (!searchString) {
+      alert('Please enter search string');
+      return;
+    }
+
     props.setPopup(1);
-    setTimeout(() => {
-      props.setPopup(0);
-    }, 5000)
+      try {
+        const response = await api.post(`${API_ENDPOINTS.SEARCH_ARTICLES}?queryextract=${searchString}`);
+        dispatch({ type: 'UPDATE_STATE', key: 'articles', data: response.data });
+        props.setPopup(0);
+        navigate("/result");
+      } catch (error) {
+          alert('An error occured');  
+          console.error("Failed to fetch data: ", error);
+      }
   }
 
   const onArticleSelect = (article) => {
@@ -43,6 +57,10 @@ function ResultPage(props) {
     return null;
   }
 
+  const handleSearchChanged = (e) => {
+    setSearchString(e);
+  }
+
   return (
     <div className="result-page">
       <div className="border-bottom result-header">
@@ -53,7 +71,7 @@ function ResultPage(props) {
         </div>
         <div className="d-flex align-items-center flex-gap-12 margin-bottom-24">
           <span className="font-bold">Query</span>
-          <Input minWidth="500px" />
+          <Input minWidth="500px" onChange={handleSearchChanged} />
           <Button content="Edit" onClick={handleNext} />
         </div>
         <div className="d-flex align-items-center flex-gap-16">
