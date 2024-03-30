@@ -7,21 +7,37 @@ import { useNavigate, Link } from "react-router-dom";
 import ArticlesData from './dummy.json';
 import { useContext } from "react";
 import { ArticleContext } from "../../App";
+import api from "../../api/api";
+import { API_ENDPOINTS } from "../../api/apiEndpoints";
 
   function SearchPage(props) {
 
     const [startDate, setStartDate] = useState(moment().subtract(3, 'months').format('MM/DD/YYYY'));
     const [endDate, setEndDate] = useState(moment().subtract(3, 'months').format('MM/DD/YYYY'));
+    const [searchString, setSearchString] = useState('');
     const navigate = useNavigate();
     const { state, dispatch } = useContext(ArticleContext);
 
-    const handleNext = () => {
+    const handleNext = async () => {
+      if (!searchString) {
+        alert('Please enter search string');
+        return;
+      }
+
       props.setPopup(1);
-      setTimeout(() => {
-        props.setPopup(0);
-        dispatch({ type: 'UPDATE_STATE', key: 'articles', data: ArticlesData });
-        navigate("/result");
-      }, 5000)
+        try {
+          const response = await api.post(`${API_ENDPOINTS.SEARCH_ARTICLES}?queryextract=${searchString}`);
+          dispatch({ type: 'UPDATE_STATE', key: 'articles', data: response.data });
+          props.setPopup(0);
+          navigate("/result");
+        } catch (error) {
+            alert('An error occured');  
+            console.error("Failed to fetch data: ", error);
+        }
+    }
+
+    const handleSearchChanged = (e) => {
+      setSearchString(e);
     }
 
     return (
@@ -33,7 +49,7 @@ import { ArticleContext } from "../../App";
         </div>
         <div className="d-flex align-items-center flex-gap-12 margin-bottom-24">
           <span className="font-bold">Query</span>
-          <Input minWidth="500px" />
+          <Input minWidth="500px" onChange={handleSearchChanged} />
           <Button content="Search" onClick={handleNext} />
         </div>
         <div className="d-flex align-items-center flex-gap-12">
