@@ -13,33 +13,28 @@ import ArticleDetails from "./articleDetails";
 import QuestionAndAnswer from "./questionAndAnswer";
 import { API_ENDPOINTS } from "../../api/apiEndpoints";
 import api from "../../api/api";
+import ArticlesData from './dummy.json';
 
 function ResultPage(props) {
 
   const [startDate, setStartDate] = useState(moment().subtract(3, 'months').format('MM/DD/YYYY'));
   const [endDate, setEndDate] = useState(moment().subtract(3, 'months').format('MM/DD/YYYY'));
-  const [searchString, setSearchString] = useState('');
   const [selectedArticle, setSelectedArticle] = useState(null);
   const { state, dispatch } = useContext(ArticleContext);
   const [CurrentCmp, setCurrentCmp] = useState(1);
   const navigate = useNavigate();
 
   const handleNext = async () => {
-    if (!searchString) {
+    if (!state.searchString) {
       alert('Please enter search string');
       return;
     }
-
     props.setPopup(1);
-      try {
-        const response = await api.post(`${API_ENDPOINTS.SEARCH_ARTICLES}?queryextract=${searchString}`);
-        dispatch({ type: 'UPDATE_STATE', key: 'articles', data: response.data });
-        props.setPopup(0);
-        navigate("/result");
-      } catch (error) {
-          alert('An error occured');  
-          console.error("Failed to fetch data: ", error);
-      }
+    setTimeout(() => {
+      props.setPopup(0);
+      dispatch({ type: 'UPDATE_STATE', key: 'articles', data: ArticlesData });
+      navigate("/result");
+    }, 5000)
   }
 
   const onArticleSelect = (article) => {
@@ -58,7 +53,7 @@ function ResultPage(props) {
   }
 
   const handleSearchChanged = (e) => {
-    setSearchString(e);
+    dispatch({ type: 'UPDATE_STATE', key: 'searchString', data: e });
   }
 
   return (
@@ -71,7 +66,7 @@ function ResultPage(props) {
         </div>
         <div className="d-flex align-items-center flex-gap-12 margin-bottom-24">
           <span className="font-bold">Query</span>
-          <Input minWidth="500px" onChange={handleSearchChanged} />
+          <Input value={state.searchString} minWidth="500px" onChange={handleSearchChanged} />
           <Button content="Edit" onClick={handleNext} />
         </div>
         <div className="d-flex align-items-center flex-gap-16">

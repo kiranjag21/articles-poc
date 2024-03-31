@@ -19,25 +19,21 @@ import { API_ENDPOINTS } from "../../api/apiEndpoints";
     const { state, dispatch } = useContext(ArticleContext);
 
     const handleNext = async () => {
-      if (!searchString) {
+      if (!state.searchString) {
         alert('Please enter search string');
         return;
       }
 
       props.setPopup(1);
-        try {
-          const response = await api.post(`${API_ENDPOINTS.SEARCH_ARTICLES}?queryextract=${searchString}`);
-          dispatch({ type: 'UPDATE_STATE', key: 'articles', data: response.data });
-          props.setPopup(0);
-          navigate("/result");
-        } catch (error) {
-            alert('An error occured');  
-            console.error("Failed to fetch data: ", error);
-        }
+      setTimeout(() => {
+        props.setPopup(0);
+        dispatch({ type: 'UPDATE_STATE', key: 'articles', data: ArticlesData });
+        navigate("/result");
+      }, 5000)
     }
 
     const handleSearchChanged = (e) => {
-      setSearchString(e);
+      dispatch({ type: 'UPDATE_STATE', key: 'searchString', data: e });
     }
 
     return (
@@ -49,7 +45,7 @@ import { API_ENDPOINTS } from "../../api/apiEndpoints";
         </div>
         <div className="d-flex align-items-center flex-gap-12 margin-bottom-24">
           <span className="font-bold">Query</span>
-          <Input minWidth="500px" onChange={handleSearchChanged} />
+          <Input value={state.searchString} minWidth="500px" onChange={handleSearchChanged} />
           <Button content="Search" onClick={handleNext} />
         </div>
         <div className="d-flex align-items-center flex-gap-12">
